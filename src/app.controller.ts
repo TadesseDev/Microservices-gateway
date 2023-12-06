@@ -11,7 +11,10 @@ export class AppController {
     private readonly appService: AppService,
     @Inject('GATEWAY') private readonly client: ClientKafka,
   ) {}
-
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
   @Get('/send-notification')
   sendNotifications(@Body() data: CreateNotificationDto): string {
     console.log('send-notification');
@@ -42,13 +45,16 @@ export class AppController {
   @Get('/send-mail')
   sendMail(@Body() mailData: CreateMailDto): string {
     console.log('send-mail');
-    this.client.emit('send-mail', mailData || {
-      to: 'itsamateroflife@gmail.com',
-      subject: 'Hello',
-      data: {
-        name: 'John Doe',
+    this.client.emit(
+      'send-mail',
+      mailData || {
+        to: 'itsamateroflife@gmail.com',
+        subject: 'Hello',
+        data: {
+          name: 'John Doe',
+        },
       },
-    });
+    );
     return 'email event emitted';
   }
 }
