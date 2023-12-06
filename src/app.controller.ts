@@ -16,11 +16,11 @@ export class AppController {
     return this.appService.getHello();
   }
   @Get('/send-notification')
-  sendNotifications(@Body() data: CreateNotificationDto): string {
+  sendNotifications(@Body() data: CreateNotificationDto[]): string {
     console.log('send-notification');
     this.client.emit(
       'send-notification',
-      data || [
+      data.length || [
         {
           telegram_id: '656582808', // A valid id
           user_id: 'we will receive this',
