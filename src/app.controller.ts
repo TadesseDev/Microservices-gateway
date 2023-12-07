@@ -2,14 +2,14 @@ import { Body, Controller, Get, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreateNotificationDto } from './dto/create-notification.dto';
-import { get } from 'http';
 import { CreateMailDto } from './dto/create-mail.dto';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    @Inject('GATEWAY') private readonly client: ClientKafka,
+    @Inject('NOTIFICATION-GATEWAY')
+    private readonly notificationClient: ClientKafka,
   ) {}
   @Get()
   getHello(): string {
@@ -18,7 +18,7 @@ export class AppController {
   @Get('/send-notification')
   sendNotifications(@Body() data: CreateNotificationDto[]): string {
     console.log('send-notification');
-    this.client.emit(
+    this.notificationClient.emit(
       'send-notification',
       data.length || [
         {
@@ -45,7 +45,7 @@ export class AppController {
   @Get('/send-mail')
   sendMail(@Body() mailData: CreateMailDto): string {
     console.log('send-mail');
-    this.client.emit(
+    this.notificationClient.emit(
       'send-mail',
       mailData || {
         to: 'itsamateroflife@gmail.com',

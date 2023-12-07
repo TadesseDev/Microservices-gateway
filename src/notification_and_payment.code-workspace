@@ -1,11 +1,8 @@
 {
-	"folders": [
-		{
-			"path": "../../notification_and_payment"
-		},
-		{
-			"path": ".."
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "../../notification_and_payment"
+    }
+  ],
+  "settings": {}
 }
