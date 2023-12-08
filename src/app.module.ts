@@ -15,7 +15,7 @@ require('dotenv').config();
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: 'GATEWAY_SERVICE',
+              clientId: 'GATEWAY-NOTIFICATION',
               brokers: [process.env.KAFKA_BROKER],
             },
             consumer: {
@@ -28,11 +28,11 @@ require('dotenv').config();
           transport: Transport.KAFKA,
           options: {
             client: {
-              clientId: 'GATEWAY_SERVICE',
+              clientId: 'GATEWAY_GAME',
               brokers: [process.env.KAFKA_BROKER],
             },
             consumer: {
-              groupId: 'NOTIFICATION-SENDERS',
+              groupId: 'GAME-SERVICE-USERS',
             },
           },
         },
