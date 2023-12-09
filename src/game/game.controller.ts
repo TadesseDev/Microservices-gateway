@@ -142,12 +142,33 @@ export class GameController implements OnModuleInit {
       },
     });
   }
+
+  @Get('/get-current-games')
+  getCurrentGame() {
+    console.log('getting the current game');
+    this.gameClient.send('get-current-games', '').subscribe({
+      next: (response) => {
+        // Handle successful response
+        // TODO: DO something with the result
+        console.log('Event published successfully:', response);
+      },
+      error: (error) => {
+        // Handle error
+        console.error('Error publishing event:', error);
+      },
+      complete: () => {
+        console.log('done emitting event ');
+      },
+    });
+  }
+
   async onModuleInit() {
     this.gameClient.subscribeToResponseOf('create-bet');
     this.gameClient.subscribeToResponseOf('get-recept-information');
     this.gameClient.subscribeToResponseOf('get-bet');
     this.gameClient.subscribeToResponseOf('redeem-bet');
     this.gameClient.subscribeToResponseOf('get-games');
+    this.gameClient.subscribeToResponseOf('get-current-games');
     await this.gameClient.connect();
   }
 }
