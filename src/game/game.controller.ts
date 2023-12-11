@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import { ClientKafka } from '@nestjs/microservices';
-import { CreateBetDto } from 'src/dto/create-bet.dto';
+import { CreateBetDto } from '../dto/create-bet.dto';
 
 @Controller('game')
 export class GameController implements OnModuleInit {
