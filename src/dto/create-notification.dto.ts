@@ -16,9 +16,9 @@ export enum message_types {
 
 // NOTE: sending a successful notification includes passing the appropriate CreateNotificationDto, See the example below
 export class CreateNotificationDto {
-  @Transform(({ value }) => Number(value))
-  @IsNumber()
-  telegram_id: number;
+  // @Transform(({ value }) => Number(value))
+  // @IsNumber()
+  telegram_id: string;
   user_id: string;
   @IsEnum(notification_types)
   notification_type: notification_types;

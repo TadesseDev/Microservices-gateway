@@ -20,24 +20,26 @@ export class AppController {
     console.log('send-notification');
     this.notificationClient.emit(
       'send-notification',
-      data.length || [
-        {
-          telegram_id: '656582808', // A valid id
-          user_id: 'we will receive this',
-          notification_type: 'promotion',
-          message_type: 'text_with_media',
-          data: {
-            text: 'This si the text content to be used as a caption',
-            image:
-              'https://blog.hubspot.com/hs-fs/hubfs/parts-url_1.webp?width=1190&height=800&name=parts-url_1.webp',
-            media: {
-              media_type: 'video',
-              media_url:
-                'https://assets.mixkit.co/videos/preview/mixkit-a-lush-forest-with-ferns-and-death-leaves-on-the-50858-large.mp4',
+      data.length
+        ? JSON.stringify(data)
+        : [
+            {
+              telegram_id: '656582808', // A valid id
+              user_id: 'we will receive this',
+              notification_type: 'promotion',
+              message_type: 'text_with_media',
+              data: {
+                text: 'This si the text content to be used as a caption',
+                image:
+                  'https://blog.hubspot.com/hs-fs/hubfs/parts-url_1.webp?width=1190&height=800&name=parts-url_1.webp',
+                media: {
+                  media_type: 'video',
+                  media_url:
+                    'https://assets.mixkit.co/videos/preview/mixkit-a-lush-forest-with-ferns-and-death-leaves-on-the-50858-large.mp4',
+                },
+              },
             },
-          },
-        },
-      ],
+          ],
     );
     return this.appService.getHello();
   }
