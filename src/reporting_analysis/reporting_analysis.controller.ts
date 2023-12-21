@@ -1,14 +1,14 @@
 import { Body, Controller, Get, Inject, OnModuleInit } from '@nestjs/common';
-import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from 'src/dto/create-notification.dto';
 import { ClientKafka } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
+import { ReportingAnalysisService } from './reporting_analysis.service';
 
-@Controller('notification')
+@Controller('reporting-analysis')
 // extend with the module init of the nestJs microservice
-export class NotificationController implements OnModuleInit {
+export class ReportingAnalysisController implements OnModuleInit {
   constructor(
-    private readonly notificationService: NotificationService,
+    private readonly reportingAnalysisService: ReportingAnalysisService,
     @Inject('NOTIFICATION-GATEWAY')
     private readonly notificationClient: ClientKafka,
   ) {}
@@ -34,7 +34,7 @@ export class NotificationController implements OnModuleInit {
   }
   @Get()
   getHello(): string {
-    return this.notificationService.getHello();
+    return this.reportingAnalysisService.getHello();
   }
   @Get('/send-notification')
   sendNotifications(@Body() data: CreateNotificationDto[]): string {
@@ -62,7 +62,7 @@ export class NotificationController implements OnModuleInit {
             },
           ],
     );
-    return this.notificationService.getHello();
+    return this.reportingAnalysisService.getHello();
   }
   // get request to trigger a message patter "get-all-notification-logs" and return the data
   @Get('get-all-notification-logs')
