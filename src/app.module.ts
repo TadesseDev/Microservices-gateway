@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GameModule } from './game/game.module';
 import { NotificationModule } from './notification/notification.module';
+import { ReportingAnalysisModule } from './reporting_analysis/reporting_analysis.module';
 require('dotenv').config();
 
 @Module({
@@ -41,6 +42,7 @@ require('dotenv').config();
     }),
     GameModule,
     NotificationModule,
+    ReportingAnalysisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
