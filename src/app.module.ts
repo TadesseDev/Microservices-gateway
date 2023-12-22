@@ -5,7 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { GameModule } from './game/game.module';
 import { NotificationModule } from './notification/notification.module';
 import { ReportingAnalysisModule } from './reporting_analysis/reporting_analysis.module';
-require('dotenv').config();
+import 'dotenv/config';
 
 @Module({
   imports: [
@@ -35,6 +35,19 @@ require('dotenv').config();
             },
             consumer: {
               groupId: 'GAME-SERVICE-USERS',
+            },
+          },
+        },
+        {
+          name: 'REPORTING-ANALYSIS-GATEWAY',
+          transport: Transport.KAFKA,
+          options: {
+            client: {
+              clientId: 'REPORTING-ANALYSIS',
+              brokers: [process.env.KAFKA_BROKER],
+            },
+            consumer: {
+              groupId: 'REPORTING-ANALYSIS',
             },
           },
         },

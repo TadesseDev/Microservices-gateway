@@ -1,5 +1,4 @@
-import { Body, Controller, Get, Inject, OnModuleInit } from '@nestjs/common';
-import { CreateNotificationDto } from 'src/dto/create-notification.dto';
+import { Controller, Get, Inject, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { ReportingAnalysisService } from './reporting_analysis.service';
@@ -9,8 +8,8 @@ import { ReportingAnalysisService } from './reporting_analysis.service';
 export class ReportingAnalysisController implements OnModuleInit {
   constructor(
     private readonly reportingAnalysisService: ReportingAnalysisService,
-    @Inject('NOTIFICATION-GATEWAY')
-    private readonly notificationClient: ClientKafka,
+    @Inject('REPORTING-ANALYSIS-GATEWAY')
+    private readonly reportingAndAnalysisClient: ClientKafka,
   ) {}
 
   subscriber(observable: Observable<any>) {
@@ -36,42 +35,15 @@ export class ReportingAnalysisController implements OnModuleInit {
   getHello(): string {
     return this.reportingAnalysisService.getHello();
   }
-  @Get('/send-notification')
-  sendNotifications(@Body() data: CreateNotificationDto[]): string {
-    console.log('send-notification');
-    this.notificationClient.emit(
-      'send-notification',
-      data.length
-        ? JSON.stringify(data)
-        : [
-            {
-              telegram_id: '656582808', // A valid id
-              user_id: 'we will receive this',
-              notification_type: 'promotion',
-              message_type: 'text_with_media',
-              data: {
-                text: 'This si the text content to be used as a caption',
-                image:
-                  'https://blog.hubspot.com/hs-fs/hubfs/parts-url_1.webp?width=1190&height=800&name=parts-url_1.webp',
-                media: {
-                  media_type: 'video',
-                  media_url:
-                    'https://assets.mixkit.co/videos/preview/mixkit-a-lush-forest-with-ferns-and-death-leaves-on-the-50858-large.mp4',
-                },
-              },
-            },
-          ],
-    );
-    return this.reportingAnalysisService.getHello();
-  }
+
   // get request to trigger a message patter "get-all-notification-logs" and return the data
-  @Get('get-all-notification-logs')
+  @Get('notification-get-all-logs')
   async getAllNotificationLogs() {
     console.log(
       'get-all-notification-logs form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
-      'get-all-notification-logs',
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
+      'notification-get-all-logs',
       '',
     );
     return await this.subscriber(observable);
@@ -85,7 +57,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-all-notification-logs-from-to form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-all-notification-logs',
       { from: date },
     );
@@ -99,7 +71,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-weekly-notification-logs form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-all-notification-logs',
       { from: date },
     );
@@ -113,7 +85,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-monthly-notification-logs form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-all-notification-logs',
       { from: date },
     );
@@ -124,7 +96,7 @@ export class ReportingAnalysisController implements OnModuleInit {
   @Get('get-promotion-logs')
   async getPromotionLogs() {
     console.log('get-promotion-logs form notification controller gateway');
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-promotion-logs',
       '',
     );
@@ -138,7 +110,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-daily-promotion-logs form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-promotion-logs',
       { from: date },
     );
@@ -152,7 +124,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-weekly-promotion-logs form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-promotion-logs',
       { from: date },
     );
@@ -166,7 +138,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-monthly-promotion-logs form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-promotion-logs',
       { from: date },
     );
@@ -176,7 +148,7 @@ export class ReportingAnalysisController implements OnModuleInit {
   @Get('get-deposit-logs')
   async getDepositLogs() {
     console.log('get-deposit-logs form notification controller gateway');
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-deposit-logs',
       '',
     );
@@ -188,7 +160,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     const date = new Date();
     date.setHours(0, 0, 0, 0);
     console.log('get-daily-deposit-logs form notification controller gateway');
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-deposit-logs',
       { from: date },
     );
@@ -200,7 +172,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     const date = new Date();
     date.setDate(date.getDate() - 7);
     console.log('get-weekly-deposit-logs form notification controller gateway');
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-deposit-logs',
       { from: date },
     );
@@ -214,7 +186,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-monthly-deposit-logs form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-deposit-logs',
       { from: date },
     );
@@ -224,7 +196,7 @@ export class ReportingAnalysisController implements OnModuleInit {
   @Get('get-withdraw-logs')
   async getWithdrawLogs() {
     console.log('get-withdraw-logs form notification controller gateway');
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-withdraw-logs',
       '',
     );
@@ -233,7 +205,7 @@ export class ReportingAnalysisController implements OnModuleInit {
   @Get('get-event-logs')
   async getEventLogs() {
     console.log('get-event-logs form notification controller gateway');
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-event-logs',
       '',
     );
@@ -245,7 +217,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-failed-notifications form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-failed-notifications',
       '',
     );
@@ -259,7 +231,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-daily-failed-notifications form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-failed-notifications',
       { from: date },
     );
@@ -273,7 +245,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-weekly-failed-notifications form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-failed-notifications',
       { from: date },
     );
@@ -288,7 +260,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-monthly-failed-notifications form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-failed-notifications',
       { from: date },
     );
@@ -300,7 +272,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-success-notifications form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-success-notifications',
       '',
     );
@@ -315,7 +287,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-daily-success-notifications form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-success-notifications',
       { from: date },
     );
@@ -329,7 +301,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-weekly-success-notifications form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-success-notifications',
       { from: date },
     );
@@ -344,7 +316,7 @@ export class ReportingAnalysisController implements OnModuleInit {
     console.log(
       'get-monthly-success-notifications form notification controller gateway',
     );
-    const observable: Observable<any> = this.notificationClient.send(
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
       'get-success-notifications',
       { from: date },
     );
@@ -354,14 +326,96 @@ export class ReportingAnalysisController implements OnModuleInit {
   // implement nomoduleInit here
   async onModuleInit() {
     // subscribe to the topic
-    this.notificationClient.subscribeToResponseOf('get-all-notification-logs');
-    this.notificationClient.subscribeToResponseOf('get-promotion-logs');
-    this.notificationClient.subscribeToResponseOf('get-deposit-logs');
-    this.notificationClient.subscribeToResponseOf('get-withdraw-logs');
-    this.notificationClient.subscribeToResponseOf('get-event-logs');
-    this.notificationClient.subscribeToResponseOf('get-failed-notifications');
-    this.notificationClient.subscribeToResponseOf('get-success-notifications');
     // wait for the response to be emitted
-    await this.notificationClient.connect();
+
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-all-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-todays-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-weekly-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-monthly-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-promotion-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-daily-promotion-logs',
+    );
+
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-weekly-promotion-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-monthly-promotion-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-deposit-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-daily-deposit-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-weekly-deposit-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-monthly-deposit-logs',
+    );
+    // wait for the response to be emitted
+
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-withdraw-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-daily-withdraw-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-weekly-withdraw-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-monthly-withdraw-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-event-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-daily-event-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-weekly-event-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-monthly-event-logs',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-failed-notifications',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-daily-failed-notifications',
+    );
+
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-weekly-failed-notifications',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-monthly-failed-notifications',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-success-notifications',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-daily-success-notifications',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-weekly-success-notifications',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'notification-get-monthly-success-notifications',
+    );
+    await this.reportingAndAnalysisClient.connect();
   }
 }
