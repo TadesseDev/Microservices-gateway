@@ -13,7 +13,7 @@ export class ReportingAnalysisController implements OnModuleInit {
   ) {}
 
   subscriber(observable: Observable<any>) {
-    console.log('resolving the observable value');
+    console.log('resolving the observable value from gateway');
     return new Promise((resolve, reject) => {
       observable.subscribe({
         //create the next, error and complete instances
@@ -323,11 +323,38 @@ export class ReportingAnalysisController implements OnModuleInit {
     return await this.subscriber(observable);
   }
 
+  // NOTE: tests under this will test the payment service
+
+  @Get('payment-get-total-transfer')
+  async getTotalTransfer() {
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
+      'payment-get-total-transfer',
+      '',
+    );
+    return await this.subscriber(observable);
+  }
+  // Follow the same patter and generate a daily total transfer
+  @Get('payment-get-daily-transfer')
+  async getDailyTotalTransfer() {
+    const observable: Observable<any> = this.reportingAndAnalysisClient.send(
+      'payment-get-daily-transfer',
+      '',
+    );
+    return await this.subscriber(observable);
+  }
+  // q: subscribe to all the responses without having to mention the topic name
+
   // implement nomoduleInit here
   async onModuleInit() {
     // subscribe to the topic
     // wait for the response to be emitted
 
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'payment-get-total-transfer',
+    );
+    this.reportingAndAnalysisClient.subscribeToResponseOf(
+      'payment-get-daily-transfer',
+    );
     this.reportingAndAnalysisClient.subscribeToResponseOf(
       'notification-get-all-logs',
     );

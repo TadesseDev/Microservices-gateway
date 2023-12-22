@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Inject, OnModuleInit } from '@nestjs/common';
 import { NotificationService } from './notification.service';
-import { CreateNotificationDto } from 'src/dto/create-notification.dto';
+import { CreateNotificationDto } from '../dto/create-notification.dto';
 import { ClientKafka } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 
