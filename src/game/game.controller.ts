@@ -180,8 +180,28 @@ export class GameController implements OnModuleInit {
       },
     });
   }
+  @Get('/get-bets')
+  getBets() {
+    console.log('getting all bets: gateway');
+    this.gameClient.send('get-bets', '').subscribe({
+      next: (response) => {
+        // Handle successful response
+        // TODO: DO something with the result
+        console.log('Event published successfully:', response);
+      },
+      error: (error) => {
+        // Handle error
+        console.error('Error publishing event:', error);
+      },
+      complete: () => {
+        console.log('done emitting event ');
+      },
+    });
+  }
+  // Handle successful response
 
   async onModuleInit() {
+    this.gameClient.subscribeToResponseOf('get-bets');
     this.gameClient.subscribeToResponseOf('create-bet');
     this.gameClient.subscribeToResponseOf('get-recept-information');
     this.gameClient.subscribeToResponseOf('get-bet');
